@@ -1,0 +1,90 @@
+local Players = game:GetService("Players")
+local StarterGui = game:GetService("StarterGui")
+local TweenService = game:GetService("TweenService")
+
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+-- Create GUI
+local gui = Instance.new("ScreenGui")
+gui.Name = "AntiCheatWarning"
+gui.ResetOnSpawn = false
+gui.IgnoreGuiInset = true
+gui.Parent = playerGui
+
+-- Warning messages
+local messages = {
+    "CHEATING IS BAD!",
+    "STOP USING CHEATS!",
+    "CHEATS RUIN THE GAME!",
+    "YOU ARE BREAKING THE RULES!",
+    "STOP CHEATING NOW!",
+    "PLAY FAIR!",
+    "CHEATING IS NOT COOL!",
+    "FAIR PLAY ONLY!",
+    "CHEAT DETECTED!",
+    "ANTI-CHEAT WARNING!"
+}
+
+-- Roblox notifications
+task.spawn(function()
+    for i = 1, 30 do
+        pcall(function()
+            StarterGui:SetCore("SendNotification", {
+                Title = "ANTI-CHEAT WARNING!",
+                Text = messages[math.random(1, #messages)],
+                Duration = 3
+            })
+        end)
+        task.wait(0.4)
+    end
+end)
+
+-- Fill screen with warnings
+task.spawn(function()
+    for i = 1, 150 do
+        local warning = Instance.new("TextLabel")
+        warning.Name = "CheatWarning"
+
+        warning.Size = UDim2.new(
+            0,
+            math.random(180, 350),
+            0,
+            65
+        )
+
+        warning.Position = UDim2.new(
+            math.random(0, 75) / 100,
+            0,
+            math.random(0, 90) / 100,
+            0
+        )
+
+        warning.BackgroundColor3 = Color3.fromRGB(180, 0, 0)
+        warning.BackgroundTransparency = 0.1
+
+        warning.BorderSizePixel = 2
+        warning.BorderColor3 = Color3.fromRGB(255, 255, 255)
+
+        warning.Text = messages[math.random(1, #messages)]
+        warning.TextColor3 = Color3.fromRGB(255, 255, 255)
+        warning.TextScaled = true
+        warning.TextWrapped = true
+        warning.Font = Enum.Font.GothamBold
+
+        warning.Rotation = math.random(-15, 15)
+        warning.Parent = gui
+
+        -- Rounded corners
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, 8)
+        corner.Parent = warning
+
+        task.wait(0.08)
+    end
+end)
+
+-- Kick player after 15-20 seconds
+task.wait(math.random(15, 20))
+
+player:Kick("You have been caught cheating!")
